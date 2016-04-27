@@ -38,7 +38,11 @@ class DataController extends Controller
     {
         $this->validate($request, $this->rules);
 
-        Data::create($request->only(['name', 'value']));
+        $data = $request->only(['name', 'value']);
+
+        $data['user_id'] = $request->user()->id;
+
+        Data::create($data);
 
         return redirect()->route('data.index')->with('msg', 'Data was created.');
     }
@@ -50,6 +54,8 @@ class DataController extends Controller
 
     public function edit(Data $data)
     {
+        $this->authorize($data);
+
         $action = 'Update';
 
         return view('data.edit', compact('data', 'action'));
@@ -57,6 +63,8 @@ class DataController extends Controller
 
     public function update(Request $request, Data $data)
     {
+        $this->authorize($data);
+
         $this->validate($request, $this->rules);
 
         $data->update($request->only(['name', 'value']));
@@ -66,6 +74,8 @@ class DataController extends Controller
 
     public function destroy(Data $data)
     {
+        $this->authorize('delete', $data);
+
         $data->delete();
 
         return redirect()->route('data.index')->with('msg', 'Data was deleted.');
