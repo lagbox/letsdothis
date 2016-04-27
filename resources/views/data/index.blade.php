@@ -21,9 +21,9 @@
 
 
                     @if (Auth::check())
-                    <span class="pull-right">
-                        <a href="{{ route('data.create') }}" class="btn btn-success">Add New Data</a>
-                    </span>
+                        <span class="pull-right">
+                            <a href="{{ route('data.create') }}" class="btn btn-success">Add New Data</a>
+                        </span>
                     @endif
 
                     <table class="table table-striped">
@@ -32,35 +32,41 @@
                                 <th>#</th>
                                 <th>Name</th>
                                 <th>Value</th>
+                                <th>User</th>
                                 <th>Created At</th>
                                 @if (Auth::check())
-                                <th>Actions</th>
+                                    <th>Actions</th>
                                 @endif
                             </tr>
                         </thead>
                         <tbody>
                             @forelse($data as $item)
-                            <tr>
-                                <th scope="row"><a href="{{ route('data.show', [$item]) }}">{{ $item->id }}</a></th>
-                                <td><a href="{{ route('data.show', [$item]) }}">{{ $item->name }}</a></td>
-                                <td>{{ $item->value }}</td>
-                                <td>{{ $item->created_at->diffForHumans() }}</td>
-                                @if (Auth::check())
-                                <td>
-                                    <a href="{{ route('data.edit', [$item->id]) }}" class="btn btn-primary">Edit</a>
-                                    <form method="POST" action="{{ route('data.destroy', [$item->id]) }}" style="display:inline">
-                                        <input type="hidden" name="_method" value="DELETE">
-                                        {{ csrf_field() }}
-                                        <input type="submit" value="Delete" class="btn btn-danger">
-                                    </form>
-                                </td>
-                                @endif
-                                <td></td>
-                            </tr>
+                                <tr>
+                                    <th scope="row"><a href="{{ route('data.show', [$item]) }}">{{ $item->id }}</a></th>
+                                    <td><a href="{{ route('data.show', [$item]) }}">{{ $item->name }}</a></td>
+                                    <td>{{ $item->value }}</td>
+                                    <td>{{ $item->user ? $item->user->name : 'None' }}</td>
+                                    <td>{{ $item->created_at->diffForHumans() }}</td>
+                                    @if (Auth::check())
+                                        <td>
+                                            @can ('edit', $item)
+                                                <a href="{{ route('data.edit', [$item->id]) }}" class="btn btn-primary">Edit</a>
+                                            @endcan
+                                            @can ('delete', $item)
+                                                <form method="POST" action="{{ route('data.destroy', [$item->id]) }}" style="display:inline">
+                                                    <input type="hidden" name="_method" value="DELETE">
+                                                    {{ csrf_field() }}
+                                                    <input type="submit" value="Delete" class="btn btn-danger">
+                                                </form>
+                                            @endcan
+                                        </td>
+                                    @endif
+                                    <td></td>
+                                </tr>
                             @empty
-                            <tr>
-                                <td colspan="{{ 4 + Auth::check() }}" align="center">No Data to display.</td>
-                            </tr>
+                                <tr>
+                                    <td colspan="{{ 4 + Auth::check() }}" align="center">No Data to display.</td>
+                                </tr>
                             @endforelse
                         </tbody>
                     </table>

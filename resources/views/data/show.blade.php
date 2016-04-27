@@ -21,6 +21,12 @@
                             {{ $data->value }}
                         </p>
                     </div>
+                    <div>
+                        <strong>User:</strong>
+                        <p>
+                            {{ $data->user ? $data->user->name : 'None' }}
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
