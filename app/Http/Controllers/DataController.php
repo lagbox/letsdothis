@@ -3,16 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Data;
-use App\Http\Requests;
 use Illuminate\Http\Request;
+use App\Http\Requests\DataRequest;
 
 class DataController extends Controller
 {
-    protected $rules = [
-        'name' => 'required',
-        'value' => 'required'
-    ];
-
     public function __construct()
     {
         $this->middleware('auth', ['except' => ['index', 'show']]);
@@ -34,9 +29,9 @@ class DataController extends Controller
         return view('data.edit', compact('action', 'data'));
     }
 
-    public function store(Request $request)
+    public function store(DataRequest $request)
     {
-        $this->validate($request, $this->rules);
+        //$this->validate($request, $this->rules);
 
         $data = $request->only(['name', 'value']);
 
@@ -61,11 +56,11 @@ class DataController extends Controller
         return view('data.edit', compact('data', 'action'));
     }
 
-    public function update(Request $request, Data $data)
+    public function update(DataRequest $request, Data $data)
     {
         $this->authorize($data);
 
-        $this->validate($request, $this->rules);
+        //$this->validate($request, $this->rules);
 
         $data->update($request->only(['name', 'value']));
 
