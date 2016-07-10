@@ -49,6 +49,9 @@
                 <ul class="nav navbar-nav">
                     <li><a href="{{ url('/home') }}">Home</a></li>
                     <li><a href="{{ route('data.index') }}">Data</a></li>
+                    @if (Auth::check())
+                        <li><a href="{{ route('users.index') }}">Users</a></li>
+                    @endif
                 </ul>
 
                 <!-- Right Side Of Navbar -->
