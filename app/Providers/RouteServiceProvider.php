@@ -24,7 +24,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot(Router $router)
     {
-        //
+        $router->singularResourceParameters();
 
         parent::boot($router);
     }
